@@ -1,10 +1,13 @@
 import 'package:extra/pages/home.dart';
+import 'package:extra/pages/terms.dart';
 import 'package:extra/pages/welcome/login.dart';
 import 'package:extra/pages/welcome/register.dart';
 import 'package:extra/utils/consts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:nice_button/nice_button.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 class HomeWelcome extends StatefulWidget {
   @override
@@ -22,10 +25,7 @@ class _HomeWelcomeState extends State<HomeWelcome> {
         padding: EdgeInsets.symmetric(horizontal: 20),
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _content()
-          ),
+          child: Padding(padding: const EdgeInsets.all(8.0), child: _content()),
         ),
       ),
     );
@@ -50,7 +50,18 @@ class _HomeWelcomeState extends State<HomeWelcome> {
         SizedBox(
           height: 30,
         ),
-        Text("vs: 0.0.1")
+        InkWell(
+          onTap: () {
+            Consts().push(context, Terms());
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Termos & compromisso"),
+          ),
+        ),
+        SizedBox(
+          height: 30,
+        ),
       ],
     );
   }
@@ -66,13 +77,21 @@ class _HomeWelcomeState extends State<HomeWelcome> {
           onPressed: () {
             switch (whereIGo) {
               case 1:
-                Consts().push(context, Login(isScroable: false, ));
+                Consts().push(
+                    context,
+                    Login(
+                      isScroable: false,
+                    ));
                 break;
               case 2:
-                Consts().push(context, Register( isScroable: false,));
+                Consts().push(
+                    context,
+                    Register(
+                      isScroable: false,
+                    ));
                 break;
               case 3:
-                Consts().push(context, Home( ));
+                _alert(context);
                 break;
             }
           },
@@ -87,6 +106,32 @@ class _HomeWelcomeState extends State<HomeWelcome> {
               )
             : Container()
       ],
+    );
+  }
+
+  void _alert(context) {
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return ClassicGeneralDialogWidget(
+          negativeText: "Não ",
+          positiveText: "Sim aceito",
+          titleText: 'Termos & Compromisso',
+          contentText:
+              'Para esta opcção ser concluida por favor aceite os nossos termos',
+          onPositiveClick: () {
+            Navigator.of(context).pop();
+            Consts().push(context, Home(), replace: true);
+          },
+          onNegativeClick: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
+      animationType: DialogTransitionType.size,
+      curve: Curves.ease,
+      duration: Duration(seconds: 1),
     );
   }
 }

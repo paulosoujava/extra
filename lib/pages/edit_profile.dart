@@ -3,6 +3,7 @@ import 'package:extra/pages/list_extra.dart';
 import 'package:extra/utils/consts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 
@@ -91,9 +92,10 @@ class _ProfileEditState extends State<ProfileEdit> {
           Padding(
             padding: EdgeInsets.all(10),
             child: IconButton(
-                icon: Icon(Icons.playlist_add_check), onPressed: () {
-              Consts().push(context, ListExtras() );
-            }),
+                icon: Icon(Icons.playlist_add_check),
+                onPressed: () {
+                  Consts().push(context, ListExtras());
+                }),
           )
         ],
       ),
@@ -107,19 +109,41 @@ class _ProfileEditState extends State<ProfileEdit> {
               SizedBox(
                 height: 10,
               ),
-              InkWell(
-                borderRadius: BorderRadius.circular(90),
-                onTap: () {},
-                child: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  maxRadius: 45,
-                  minRadius: 45,
-                  child: Image.asset(
-                    "assets/images/avatar.png",
-                    width: 70,
-                    height: 70,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        maxRadius: 45,
+                        minRadius: 45,
+                        child: Image.asset(
+                          "assets/images/avatar.png",
+                          width: 70,
+                          height: 70,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 45, left: 55),
+                        child: FloatingActionButton(
+                          onPressed: () {},
+                          child: Icon(Icons.camera_alt),
+                          mini: true,
+                        ),
+                      )
+                    ],
                   ),
-                ),
+                  InkWell(
+                    onTap: (){
+                      _alert(context);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Text("Limite de anúncio 01\nComprar Mais"),
+                    ),
+                  ),
+                ],
               ),
               Text("cadastre sua foto"),
               SizedBox(
@@ -165,6 +189,29 @@ class _ProfileEditState extends State<ProfileEdit> {
           ),
         ),
       ),
+    );
+  }
+
+  void _alert(context) {
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return ClassicGeneralDialogWidget(
+          positiveText: "Ok, entendi",
+          titleText: 'Limites',
+          contentText:
+          'Você pode fazer um anuncio para publicar um extra, Ex.: Preciso de 5 garçons par o dia tal no lugar tal, caso queira mais'
+              ' anúncios entre em contato conosco: paulosoujava@gmailcom',
+          onPositiveClick: () {
+            Navigator.of(context).pop();
+          },
+
+        );
+      },
+      animationType: DialogTransitionType.size,
+      curve: Curves.ease,
+      duration: Duration(seconds: 1),
     );
   }
 }

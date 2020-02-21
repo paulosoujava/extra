@@ -19,9 +19,11 @@ class Consts {
 //    );
 //  }
 
-  push(context, Widget page){
-    Navigator.of(context).push(_createRoute(page));
-}
+  push(context, Widget page, {replace = false}) {
+    replace
+        ? Navigator.of(context).pushReplacement(_createRoute(page))
+        : Navigator.of(context).push(_createRoute(page));
+  }
 
 
   Route _createRoute(Widget page) {
@@ -32,7 +34,8 @@ class Consts {
         var end = Offset.zero;
         var curve = Curves.ease;
 
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),
@@ -41,11 +44,13 @@ class Consts {
       },
     );
   }
+
   header(context) {
-    return  Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text("E",
+        Text(
+          "E",
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.display1,
             fontSize: 30,
@@ -53,7 +58,8 @@ class Consts {
             color: Colors.black,
           ),
         ),
-        Text("X",
+        Text(
+          "X",
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.display1,
             fontSize: 38,
@@ -61,7 +67,8 @@ class Consts {
             color: Consts.PRIMARY_COLOR,
           ),
         ),
-        Text("tra",
+        Text(
+          "tra",
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.display1,
             fontSize: 30,
@@ -73,14 +80,15 @@ class Consts {
     );
   }
 
-  title(context,  String action){
-    return  Column(
+  title(context, String action) {
+    return Column(
       children: <Widget>[
         header(context),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("[",
+            Text(
+              "[",
               style: GoogleFonts.portLligatSans(
                 textStyle: Theme.of(context).textTheme.display1,
                 fontSize: 30,
@@ -88,7 +96,8 @@ class Consts {
                 color: PRIMARY_COLOR,
               ),
             ),
-            Text("$action",
+            Text(
+              "$action",
               style: GoogleFonts.portLligatSans(
                 textStyle: Theme.of(context).textTheme.display1,
                 fontSize: 20,
@@ -96,7 +105,8 @@ class Consts {
                 color: Colors.black,
               ),
             ),
-            Text("]",
+            Text(
+              "]",
               style: GoogleFonts.portLligatSans(
                 textStyle: Theme.of(context).textTheme.display1,
                 fontSize: 30,

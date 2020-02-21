@@ -1,5 +1,7 @@
 import 'package:extra/entity/profile.dart';
+import 'package:extra/pages/about.dart';
 import 'package:extra/pages/edit_profile.dart';
+import 'package:extra/pages/terms.dart';
 import 'package:extra/pages/welcome/welcome.dart';
 import 'package:extra/service/service.dart';
 import 'package:extra/utils/consts.dart';
@@ -63,7 +65,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Welcome()),
+                MaterialPageRoute(builder: (context) => About()),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Terms()),
               );
               break;
           }
@@ -76,6 +84,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           PopupMenuItem(
             value: 2,
             child: Text("Sobre"),
+          ),
+          PopupMenuItem(
+            value: 3,
+            child: Text("Termos"),
           ),
         ],
       );

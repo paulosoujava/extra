@@ -24,6 +24,13 @@ class _CardItemExtraState extends State<CardItemExtra> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
+              "FLorianópolis - SC",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 25),
+            ),
+            SizedBox(height: 10,),
+            Text(
               widget.extra,
               maxLines: 10,
               overflow: TextOverflow.ellipsis,

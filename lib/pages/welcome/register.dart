@@ -5,6 +5,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:nice_button/nice_button.dart';
 
+
 class Register extends StatefulWidget {
   bool isGoogleLogin = false;
   bool isScroable;
@@ -17,51 +18,62 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
 
-
+  bool isCheck = false;
   @override
   Widget build(BuildContext context) {
-
-    return  Scaffold(
-      body:Center(
-          child: ListView(
-              shrinkWrap: true,
-              children: [
-                Row(
-                  children: <Widget>[
-                    widget.isScroable
-                        ? Container()
-                        : FlatButton.icon(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.arrow_back_ios, color: Consts.PRIMARY_COLOR,),
-                      label: Text("Voltar", style: TextStyle(color: Consts.PRIMARY_COLOR,),),
+    return Scaffold(
+        body: Center(
+            child: ListView(
+      shrinkWrap: true,
+      children: [
+        Row(
+          children: <Widget>[
+            widget.isScroable
+                ? Container()
+                : FlatButton.icon(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: Consts.PRIMARY_COLOR,
                     ),
-                  ],
-
-                ),
-
-                Consts().title(context, "Novo usuário"),
-                Padding(
-                  padding: EdgeInsets.all(16),
-                 child: _textFields(), 
-                ),
-                NiceButton(
-                  width: double.infinity,
-                  gradientColors: [
-                    Consts.PRIMARY_COLOR,
-                    Consts.ACCENT_COLOR
-                  ],
-                  text: "Cadastrar",
-                ),
-                SizedBox(height: 30,),
-              ],
-              
-          )
-
-      )
-    );
-
+                    label: Text(
+                      "Voltar",
+                      style: TextStyle(
+                        color: Consts.PRIMARY_COLOR,
+                      ),
+                    ),
+                  ),
+          ],
+        ),
+        Consts().title(context, "Novo usuário"),
+        Padding(
+          padding: EdgeInsets.all(16),
+          child: _textFields(),
+        ),
+        NiceButton(
+          width: double.infinity,
+          gradientColors: [Consts.PRIMARY_COLOR, Consts.ACCENT_COLOR],
+          text: "Cadastrar",
+        ),
+        Center(
+          child: CheckboxListTile(
+            title: const Text('Aceitar os Termos'),
+            value: isCheck,
+            onChanged: (bool value) {
+              setState(() {
+                isCheck = value;
+              });
+            },
+            secondary: const Icon(Icons.library_books),
+          ),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+      ],
+    )));
   }
 
   _entryField(String title, String hint, {bool isPass = false}) {
