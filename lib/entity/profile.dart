@@ -12,12 +12,26 @@ class Profile {
   List<Talks> talks;
   String description;
 
-  Profile({this.id, this.urlPhoto, this.name, this.city, this.state, this.mainFunction, this.othersFunctions, this.talks, this.description});
+  bool IsReported;
+  String month;
+  int limit;
+
+  Profile(
+      {bool IsReported = false,
+      int limit = 1,
+      this.month,
+      this.id,
+      this.urlPhoto,
+      this.name,
+      this.city,
+      this.state,
+      this.mainFunction,
+      this.othersFunctions,
+      this.talks,
+      this.description});
 
   @override
   String toString() {
     return 'Profile{id: $id, name: $name, city: $city, state: $state, urlPhoto: $urlPhoto, mainFunction: $mainFunction, othersFunctions: $othersFunctions, talks: $talks, messageProfile: $description}';
   }
-
-
 }
