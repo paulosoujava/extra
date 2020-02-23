@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "662283543309",
+    "firebase_url": "https://extra-b6962.firebaseio.com",
+    "project_id": "extra-b6962",
+    "storage_bucket": "extra-b6962.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662283543309:android:2becc41b889cb64828c644",
+        "android_client_info": {
+          "package_name": "br.com.extra"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "662283543309-bgn4v6opnuhtaqa5ncf3q0n4c9i5jror.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.extra",
+            "certificate_hash": "20dd569fe348483dc161b9b080977097504531f3"
+          }
+        },
+        {
+          "client_id": "662283543309-g841gijt6tetnqtu855s3bb2k60q2pp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1HzIDEhO3rnEtm4zIaU2RhrrBGwLLt88"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "662283543309-g841gijt6tetnqtu855s3bb2k60q2pp9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
