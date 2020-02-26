@@ -1,7 +1,8 @@
 import 'package:extra/entity/profile.dart';
 import 'package:extra/pages/public_profile.dart';
 import 'package:extra/service/service.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/colors.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,20 +27,20 @@ class _CardItemState extends State<CardItem> {
 
         ),
         Divider(
-          color: Consts.PRIMARY_COLOR,
+          color: MyColors.PRIMARY_COLOR,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             FlatButton.icon(
                 onPressed: () {
-                  Consts().push(context, PublicProfile(widget.profile));
+                  Utils().push(context, PublicProfile(widget.profile));
                 },
                 icon: Icon(Icons.visibility),
                 label: Text("Perfil")),
             FlatButton.icon(
                 onPressed: () {
-                  Consts().push(context, Service().getChats());
+                  Utils().push(context, Service().getChats());
                 },
                 icon: Icon(Icons.chat),
                 label: Text("Chat")),

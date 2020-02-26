@@ -1,8 +1,9 @@
 import 'package:extra/pages/welcome/welcome.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/colors.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 
 void main() => runApp(MyApp());
@@ -23,8 +24,8 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         // Define the default brightness and colors.
         brightness: Brightness.light,
-        primaryColor: Consts.PRIMARY_COLOR,
-        accentColor: Consts.ACCENT_COLOR,
+        primaryColor: MyColors.PRIMARY_COLOR,
+        accentColor: MyColors.ACCENT_COLOR,
         fontFamily: 'Tahoma',
       ),
       home: Welcome(),

@@ -2,7 +2,7 @@ import 'package:bubble/bubble.dart';
 import 'package:extra/entity/messages.dart';
 import 'package:extra/entity/profile.dart';
 import 'package:extra/entity/talks.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class Chat extends StatefulWidget {
@@ -123,7 +123,7 @@ class _ChatState extends State<Chat> {
     return Bubble(
       alignment: Alignment.center,
       color: Color.fromARGB(255, 212, 234, 244),
-      elevation: 1 * Consts().pixel(context),
+      elevation: 1 * Utils().pixel(context),
       margin: BubbleEdges.only(top: 8.0),
       child: Text('TODAY', style: TextStyle(fontSize: 10)),
     );

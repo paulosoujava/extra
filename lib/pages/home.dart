@@ -3,12 +3,14 @@ import 'package:extra/pages/about.dart';
 import 'package:extra/pages/edit_profile.dart';
 import 'package:extra/pages/terms.dart';
 import 'package:extra/pages/welcome/welcome.dart';
+import 'package:extra/service/firebase_service.dart';
 import 'package:extra/service/service.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:extra/utils/custom_search_delegate.dart';
 import 'package:extra/pages/tab_extra.dart';
 import 'package:extra/pages/tab_rede.dart';
 import 'package:extra/pages/tab_conversation.dart';
+import 'package:extra/utils/strings.dart';
 import 'package:flutter/material.dart';
 
 enum SingingCharacter { lafayette, jefferson }
@@ -23,15 +25,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   final List<Text> myTabs = <Text>[
     Text(
-      "${Consts.REDE}",
+      "${Strings.REDE}",
       style: TextStyle(color: Colors.white, fontSize: 18),
     ),
     Text(
-      "${Consts.ANNONCEMENT}",
+      "${Strings.ANNONCEMENT}",
       style: TextStyle(color: Colors.white, fontSize: 18),
     ),
     Text(
-      "${Consts.CONVERSATION}",
+      "${Strings.CONVERSATION}",
       style: TextStyle(color: Colors.white, fontSize: 18),
     ),
   ];
@@ -74,6 +76,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 MaterialPageRoute(builder: (context) => Terms()),
               );
               break;
+            case 0 :
+              FirebaseService firebaseService = FirebaseService();
+              firebaseService.logout();
+              Utils().push(context, Welcome(), replace: true);
+              break;
           }
         },
         itemBuilder: (context) => [
@@ -88,6 +95,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           PopupMenuItem(
             value: 3,
             child: Text("Termos"),
+          ),
+          PopupMenuItem(
+            value: 0,
+            child: Text("Sair"),
           ),
         ],
       );

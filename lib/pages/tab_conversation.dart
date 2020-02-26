@@ -4,7 +4,7 @@ import 'package:extra/entity/talks.dart';
 import 'package:extra/pages/chat.dart';
 import 'package:extra/pages/public_profile.dart';
 import 'package:extra/service/service.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:extra/widgets/card_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

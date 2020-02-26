@@ -1,5 +1,5 @@
 import 'package:extra/entity/profile.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,7 +47,7 @@ class _TermsState extends State<Terms> {
                       mainAxisAlignment: MainAxisAlignment.start,
                        crossAxisAlignment: CrossAxisAlignment.start,
                        children: <Widget>[
-                         Consts().title(context, "Termos & Compromisso"),
+                         Utils().title(context, "Termos & Compromisso"),
                          SizedBox(height: 10,),
                          Text(
                            "Sua responsabilidade",

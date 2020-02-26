@@ -1,5 +1,6 @@
 import 'package:extra/entity/profile.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/colors.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,7 +55,7 @@ class _PublicProfileState extends State<PublicProfile> {
                 Flexible(
                   flex: 1,
                   child: CircleAvatar(
-                    backgroundColor: Consts.ACCENT_COLOR,
+                    backgroundColor: MyColors.ACCENT_COLOR,
                     minRadius: 40,
                     maxRadius: 40,
                     child: Image.asset(profile.urlPhoto, fit: BoxFit.cover, height: 40, width: 40,),

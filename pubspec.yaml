@@ -30,7 +30,11 @@ dependencies:
   flutter_animated_dialog: ^1.0.3
   nice_button: ^0.1.7
   loading_animations: "^2.1.0"
-
+  image_picker: ^0.6.3+4
+  share: ^0.6.3+5
+  firebase_auth: ^0.15.4
+  firebase_core: ^0.4.3+3
+  google_sign_in: ^4.1.1
 
 
 

@@ -1,5 +1,5 @@
 import 'package:extra/entity/profile.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,7 +47,7 @@ class _AboutState extends State<About> {
                       mainAxisAlignment: MainAxisAlignment.start,
                        crossAxisAlignment: CrossAxisAlignment.start,
                        children: <Widget>[
-                         Consts().title(context, "Sobre nós"),
+                         Utils().title(context, "Sobre nós"),
                          SizedBox(height: 10,),
                          Text(
                            "Paulo Oliveira",

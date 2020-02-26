@@ -1,5 +1,5 @@
 import 'package:extra/pages/extra.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -55,7 +55,7 @@ class _CardItemExtraState extends State<CardItemExtra> {
             label: Text(btn1)),
         FlatButton.icon(
             onPressed: () {
-              Consts().push(context, Extra());
+              Utils().push(context, Extra());
             },
             icon: Icon( widget.isAnnoncement ?  Icons.chat : Icons.edit  ),
             label: Text(btn2)),

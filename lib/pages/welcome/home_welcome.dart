@@ -2,7 +2,9 @@ import 'package:extra/pages/home.dart';
 import 'package:extra/pages/terms.dart';
 import 'package:extra/pages/welcome/login.dart';
 import 'package:extra/pages/welcome/register.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/colors.dart';
+import 'package:extra/utils/strings.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:loading_animations/loading_animations.dart';
@@ -34,29 +36,29 @@ class _HomeWelcomeState extends State<HomeWelcome> {
   _content() {
     return Column(
       children: <Widget>[
-        Consts().header(context),
+        Utils().header(context),
         SizedBox(
           height: 30,
         ),
-        _signButton("Login", 1),
+        _signButton(Strings.LOGIN, 1),
         SizedBox(
           height: 30,
         ),
-        _signButton("Novo usuário", 2),
+        _signButton(Strings.NEW_USER, 2),
         SizedBox(
           height: 30,
         ),
-        _signButton("Login com o Google", 3),
+        _signButton(Strings.WITH_GOOGLE, 3),
         SizedBox(
           height: 30,
         ),
         InkWell(
           onTap: () {
-            Consts().push(context, Terms());
+            Utils().push(context, Terms());
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("Termos & compromisso"),
+            child: Text(Strings.TERMS_AND_RESPONSABILITY),
           ),
         ),
         SizedBox(
@@ -70,21 +72,21 @@ class _HomeWelcomeState extends State<HomeWelcome> {
     return Stack(
       children: <Widget>[
         NiceButton(
-          elevation: 8,
+          elevation: 16,
           radius: 10,
-          gradientColors: [Consts.PRIMARY_COLOR, Consts.ACCENT_COLOR],
+          gradientColors: [MyColors.PRIMARY_COLOR, MyColors.ACCENT_COLOR],
           text: isGoogleLogin ? "" : title,
           onPressed: () {
             switch (whereIGo) {
               case 1:
-                Consts().push(
+                Utils().push(
                     context,
                     Login(
                       isScroable: false,
                     ));
                 break;
               case 2:
-                Consts().push(
+                Utils().push(
                     context,
                     Register(
                       isScroable: false,
@@ -115,14 +117,14 @@ class _HomeWelcomeState extends State<HomeWelcome> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return ClassicGeneralDialogWidget(
-          negativeText: "Não ",
-          positiveText: "Sim aceito",
-          titleText: 'Termos & Compromisso',
+          negativeText: Strings.NO,
+          positiveText: Strings.YES_I_ACCEPT,
+          titleText: Strings.TERMS_AND_RESPONSABILITY,
           contentText:
-              'Para esta opcção ser concluida por favor aceite os nossos termos',
+            Strings.TEXT_DIALOG,
           onPositiveClick: () {
             Navigator.of(context).pop();
-            Consts().push(context, Home(), replace: true);
+            Utils().push(context, Home(), replace: true);
           },
           onNegativeClick: () {
             Navigator.of(context).pop();

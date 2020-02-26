@@ -1,5 +1,5 @@
 import 'package:extra/pages/extra.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:extra/widgets/card_item_extra.dart';
@@ -19,7 +19,7 @@ class _ListExtrasState extends State<ListExtras> {
           IconButton(
             icon: Icon(Icons.add_circle),
             onPressed: () {
-              Consts().push(context, Extra());
+              Utils().push(context, Extra());
             },
           )
         ],

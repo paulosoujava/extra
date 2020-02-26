@@ -4,6 +4,8 @@ import 'package:extra/entity/talks.dart';
 class Profile {
   String id;
   String name;
+  String email;
+  String phone;
   String city;
   String state;
   String urlPhoto;
@@ -12,26 +14,30 @@ class Profile {
   List<Talks> talks;
   String description;
 
-  bool IsReported;
+  bool isReported;
   String month;
   int limit;
 
   Profile(
-      {bool IsReported = false,
-      int limit = 1,
-      this.month,
-      this.id,
-      this.urlPhoto,
+      {this.id,
       this.name,
+      this.email,
+      this.phone,
       this.city,
       this.state,
+      this.urlPhoto,
       this.mainFunction,
       this.othersFunctions,
       this.talks,
-      this.description});
+      this.description,
+      this.isReported,
+      this.month,
+      this.limit});
 
   @override
   String toString() {
-    return 'Profile{id: $id, name: $name, city: $city, state: $state, urlPhoto: $urlPhoto, mainFunction: $mainFunction, othersFunctions: $othersFunctions, talks: $talks, messageProfile: $description}';
+    return 'Profile{id: $id, name: $name, email: $email, phone: $phone, city: $city, state: $state, urlPhoto: $urlPhoto, mainFunction: $mainFunction, othersFunctions: $othersFunctions, talks: $talks, description: $description, isReported: $isReported, month: $month, limit: $limit}';
   }
+
+
 }

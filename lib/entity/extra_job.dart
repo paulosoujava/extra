@@ -1,9 +1,9 @@
 import 'package:extra/entity/profile.dart';
 
-class ExtraJOb {
+class ExtraJob {
   String description;
   String where;
   Profile profile;
 
-  ExtraJOb({this.description, this.where, this.profile});
+  ExtraJob({this.description, this.where, this.profile});
 }

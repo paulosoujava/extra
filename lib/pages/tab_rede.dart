@@ -1,7 +1,7 @@
 import 'package:extra/entity/profile.dart';
 import 'package:extra/pages/public_profile.dart';
 import 'package:extra/service/service.dart';
-import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
