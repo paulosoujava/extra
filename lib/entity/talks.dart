@@ -12,5 +12,11 @@ class Talks{
     return 'Talks{message: $message, profile: $profile}';
   }
 
+  Talks.fromJson(Map<String, dynamic> json) {
+    message = json["message"] != null
+        ? json["message"].map<Message>((json) => Message.fromJson(json)).toList()
+        : null;
+
+  }
 
 }

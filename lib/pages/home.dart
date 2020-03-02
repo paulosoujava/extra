@@ -1,27 +1,42 @@
+import 'dart:async';
+
+import 'package:extra/entity/extra_job.dart';
 import 'package:extra/entity/profile.dart';
 import 'package:extra/pages/about.dart';
-import 'package:extra/pages/edit_profile.dart';
+import 'package:extra/pages/profile_crud.dart';
 import 'package:extra/pages/terms.dart';
 import 'package:extra/pages/welcome/welcome.dart';
 import 'package:extra/service/firebase_service.dart';
 import 'package:extra/service/service.dart';
+import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/event_bus.dart';
+import 'package:extra/utils/prefs.dart';
 import 'package:extra/utils/utils.dart';
 import 'package:extra/utils/custom_search_delegate.dart';
 import 'package:extra/pages/tab_extra.dart';
 import 'package:extra/pages/tab_rede.dart';
 import 'package:extra/pages/tab_conversation.dart';
 import 'package:extra/utils/strings.dart';
+import 'package:extra/widgets/loading.dart';
+import 'package:extra/widgets/no_has_data.dart';
 import 'package:flutter/material.dart';
-
-enum SingingCharacter { lafayette, jefferson }
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 class Home extends StatefulWidget {
+  String nameFromLoginWithGoogle;
+
+  Home({this.nameFromLoginWithGoogle});
+
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   TabController _tabController;
+  Profile p;
+  bool isLoading = true;
+  StreamSubscription<Event> subscription;
+
 
   final List<Text> myTabs = <Text>[
     Text(
@@ -29,7 +44,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       style: TextStyle(color: Colors.white, fontSize: 18),
     ),
     Text(
-      "${Strings.ANNONCEMENT}",
+      "${Strings.ANNOUNCEMENT}",
       style: TextStyle(color: Colors.white, fontSize: 18),
     ),
     Text(
@@ -42,6 +57,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: myTabs.length);
+    _checkUser();
+    final bus = EventBus.get(context);
+    subscription = bus.stream.listen((Event e) {
+      ExtraJob extraEvent = e;
+      if (extraEvent.actionEvent == Consts.EVENT_JOB) _checkUser();
+      ;
+    });
   }
 
   @override
@@ -61,7 +83,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProfileEdit()),
+                MaterialPageRoute(builder: (context) => CrudProfile()),
               );
               break;
             case 2:
@@ -76,29 +98,29 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 MaterialPageRoute(builder: (context) => Terms()),
               );
               break;
-            case 0 :
+            case 0:
               FirebaseService firebaseService = FirebaseService();
               firebaseService.logout();
-              Utils().push(context, Welcome(), replace: true);
+              Utils().push(context, Welcome());
               break;
           }
         },
         itemBuilder: (context) => [
           PopupMenuItem(
             value: 1,
-            child: Text("Minha Conta"),
+            child: Text(Strings.MYACCOUNT),
           ),
           PopupMenuItem(
             value: 2,
-            child: Text("Sobre"),
+            child: Text(Strings.ABOUT),
           ),
           PopupMenuItem(
             value: 3,
-            child: Text("Termos"),
+            child: Text(Strings.TERMS),
           ),
           PopupMenuItem(
             value: 0,
-            child: Text("Sair"),
+            child: Text(Strings.LOGOUT),
           ),
         ],
       );
@@ -123,7 +145,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   }),
               _simplePopup(),
             ],
-            title: Text("Extra"),
+            title: Text(Strings.EXTRA),
             bottom: TabBar(
               labelPadding: EdgeInsets.all(10),
               indicatorColor: Colors.white,
@@ -133,43 +155,102 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ),
             elevation: 6,
           ),
-          body: TabBarView(
-            controller: _tabController,
-            children: <Widget>[
-              _containerProfile(),
-              _containerAnuncio(),
-              _containerChat()
-            ],
-          ),
+          body: isLoading
+              ? Loading()
+              : TabBarView(
+                  controller: _tabController,
+                  children: <Widget>[
+                    _containerProfile(),
+                    _containerAnuncio(),
+                    _containerChat()
+                  ],
+                ),
         ),
       ),
     );
   }
 
   _containerProfile() {
-    return ListView(
-      children: <Widget>[
-        TabRede(Service().getProfile())
-        //Service().getProfiles(),
-      ],
-    );
+    return p.isDataOk
+        ? NoHasData(Strings.TEXT_FIRST_TIME)
+        : ListView(
+            children: <Widget>[
+              TabRede(p)
+              //Service().getProfiles(),
+            ],
+          );
   }
 
   _containerAnuncio() {
-    return Container(
-      child: ListView(
-        children: <Widget>[
-          tab_extra(),
-        ],
-      ),
-    );
+    return (p != null && p.extras != null && p.extras.isEmpty)
+        ? Card(
+            elevation: 4,
+            margin: EdgeInsets.only(bottom: 0, left: 5, right: 5, top: 5),
+            child: Container(height: 200, child: NoHasData(Strings.NOTHING)),
+          )
+        : Container(
+            child: ListView(
+              children: <Widget>[
+                for (ExtraJob job in p.extras) TabExtra(job),
+              ],
+            ),
+          );
   }
 
   _containerChat() {
-    return ListView(
-      children: <Widget>[
-        TabConversation(Service().getProfile(),)
-      ],
+    return p == null || p.talks == null
+        ? NoHasData(Strings.NO_HAS_DATA_CONVERSATION)
+        : ListView(
+            children: <Widget>[
+              TabConversation(
+                Service().getProfile(),
+              )
+            ],
+          );
+  }
+
+  void _checkUser() async {
+    p = await Profile.get();
+    if (p != null) {
+      if (p.description != null &&
+          p.pathPhoto != null &&
+          p.name != null &&
+          p.email != null &&
+          p.phone != null &&
+          p.mainFunction != null &&
+          p.city != null &&
+          p.state != null) {
+        Prefs.setInt(Consts.ALL_DATA_PROFILE_OK, 2);
+        p.isDataOk = true;
+        p.save();
+      }
+    }
+
+    if (await Prefs.getInt(Consts.ALL_DATA_PROFILE_OK) == 1) {
+      _alertFirstTime(name: widget.nameFromLoginWithGoogle);
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  _alertFirstTime({String name}) {
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return ClassicGeneralDialogWidget(
+          positiveText: Strings.TTITLE_FIRST_TIME,
+          titleText: " ${name ?? Strings.WELCOME}",
+          contentText: Strings.TEXT_FIRST_TIME,
+          onPositiveClick: () {
+            Utils().pushNoReplacement(context, CrudProfile());
+          },
+        );
+      },
+      animationType: DialogTransitionType.size,
+      curve: Curves.easeInCirc,
+      duration: Duration(seconds: 1),
     );
   }
 }

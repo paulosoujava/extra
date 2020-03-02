@@ -10,4 +10,10 @@ class ApiResponse<T> {
   ApiResponse.error({this.result,this.msg}) {
     ok = false;
   }
+
+  @override
+  String toString() {
+    return 'ApiResponse{ok: $ok, msg: $msg, result: $result}';
+  }
+
 }

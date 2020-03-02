@@ -2,19 +2,19 @@ import 'dart:collection';
 
 import 'package:extra/api/api_response.dart';
 import 'package:extra/bloc/register_bloc.dart';
+import 'package:extra/pages/home.dart';
+import 'package:extra/pages/welcome/welcome.dart';
 import 'package:extra/service/firebase_service.dart';
 import 'package:extra/utils/colors.dart';
 import 'package:extra/utils/consts.dart';
 import 'package:extra/utils/strings.dart';
 import 'package:extra/utils/utils.dart';
+import 'package:extra/widgets/back.dart';
 import 'package:extra/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:nice_button/nice_button.dart';
 
 class Login extends StatefulWidget {
-  bool isScroable;
-
-  Login({this.isScroable = false});
 
   @override
   _LoginState createState() => _LoginState();
@@ -45,8 +45,7 @@ class _LoginState extends State<Login> {
     return ListView(
       shrinkWrap: true,
       children: [
-        _showBack(),
-        Utils().title(context, Strings.LOGIN),
+       Back(Welcome(), Strings.LOGIN),
         Padding(
           padding: EdgeInsets.all(16),
           child: Form(
@@ -55,9 +54,17 @@ class _LoginState extends State<Login> {
           ),
         ),
         NiceButton(
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState.validate()) {
-              print("OK");
+              _loadingWait();
+              ApiResponse response = await bloc.doLogin(_login.text, _password.text);
+            if( response.ok ){
+                await Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                Utils().push(context, Welcome());
+              }else{
+                await Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                Utils().basicAlert(context, Strings.OK, Strings.OPS, Utils().errorFirebase(response.msg));
+              }
             } else {
               return null;
             }
@@ -126,29 +133,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  _showBack() {
-    return Row(
-      children: <Widget>[
-        widget.isScroable
-            ? Container()
-            : FlatButton.icon(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: MyColors.PRIMARY_COLOR,
-                ),
-                label: Text(
-                  Strings.BACK,
-                  style: TextStyle(
-                    color: MyColors.PRIMARY_COLOR,
-                  ),
-                ),
-              ),
-      ],
-    );
-  }
+
 
   Future<String> _inputDialog(BuildContext context) async {
     return showDialog<String>(
@@ -203,19 +188,15 @@ class _LoginState extends State<Login> {
                       style: TextStyle(color: MyColors.PRIMARY_COLOR),
                     ),
                     onPressed: () async {
-                      _loadingWait();
                       if (_formKeyForgetPass.currentState.validate()) {
-                        ApiResponse response =
-                            await bloc.doResetLogin(_passwordReset.text);
-                        if (response.ok) {
-                          _close();
-                          Utils().basicAlert(context, Strings.OK,
-                              Strings.FORGET_PASSWORD, Strings.FORGET_TEXT);
-                        } else {
-                          _close();
-
-                          Utils().basicAlert(context, Strings.OK, Strings.OPS,
-                              Utils().errorFirebase(response.msg));
+                        _loadingWait();
+                        ApiResponse response = await bloc.doResetLogin(_passwordReset.text);
+                        if( response.ok ){
+                          await Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                          Utils().basicAlert(context, Strings.OK, Strings.FORGET_PASSWORD, Strings.FORGET_TEXT);
+                        }else{
+                          await Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                          Utils().basicAlert(context, Strings.OK, Strings.OPS, Utils().errorFirebase(response.msg));
                         }
                       } else {
                         return null;
@@ -228,9 +209,6 @@ class _LoginState extends State<Login> {
     );
   }
 
-  _close() {
-    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-  }
 
   _loadingWait() {
     showDialog<void>(
@@ -238,7 +216,7 @@ class _LoginState extends State<Login> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return WillPopScope(
-              onWillPop: () async => false,
+              onWillPop: () async => true,
               child: SimpleDialog(
                   key: _keyLoader,
                   backgroundColor: Colors.white,

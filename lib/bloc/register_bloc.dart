@@ -18,4 +18,8 @@ class WelcomeBloc extends GenericBloc<bool> {
   Future<ApiResponse> doResetLogin(String email) async {
     return await service.doResetLogin(email);
   }
+
+  Future<ApiResponse> loginGoogle() async {
+    return await service.loginGoogle();
+  }
 }

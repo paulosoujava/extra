@@ -20,16 +20,21 @@ class Loading extends StatefulWidget {
       this.sizeTitle2,
       this.sizeTitle3,
       this.hasSizeTitle = false,
-      this.sizeHeight = double.infinity,
-        this.sizeWidth = double.infinity});
+      this.sizeHeight = 0,
+        this.sizeWidth = 0});
 
   @override
   _LoadingState createState() => _LoadingState();
 }
 
 class _LoadingState extends State<Loading> {
+  
   @override
   Widget build(BuildContext context) {
+
+    sizeScreem(context);
+    
+    
     return Container(
       height: widget.sizeHeight ,
       width: widget.sizeWidth,
@@ -55,5 +60,14 @@ class _LoadingState extends State<Loading> {
         ],
       ),
     );
+  }
+
+  void sizeScreem(BuildContext context) {
+      if( widget.sizeWidth == 0 ){
+      widget.sizeWidth = MediaQuery.of(context).size.width;  
+    }
+    if( widget.sizeHeight == 0 ){
+      widget.sizeHeight = MediaQuery.of(context).size.height;
+    }
   }
 }

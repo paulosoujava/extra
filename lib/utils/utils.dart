@@ -1,10 +1,13 @@
 import 'package:bubble/bubble.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extra/utils/colors.dart';
 import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/prefs.dart';
 import 'package:extra/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:toast/toast.dart';
 
 class Utils {
   String validations(int type, String str) {
@@ -35,45 +38,39 @@ class Utils {
     }
   }
 
-  push(context, Widget page, {replace = false}) {
-    replace
-        ? Navigator.of(context).pushReplacement(_createRoute(page))
-        : Navigator.of(context).push(_createRoute(page));
+  push(context, Widget page) {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      return page;
+    }));
   }
 
-  Route _createRoute(Widget page) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(0.0, 1.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
+  pushNoReplacement(context, Widget page) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return page;
+    }));
   }
 
-  errorFirebase(String type ){
-    if( type.contains('ERROR_WEAK_PASSWORD'))
+  errorFirebase(String type) {
+    if (type.contains('ERROR_WEAK_PASSWORD'))
       return Strings.ERROR_WEAK_PASSWORD;
-    else if(type.contains("ERROR_EMAIL_ALREADY_IN_USE"))
+    else if (type.contains("ERROR_EMAIL_ALREADY_IN_USE"))
       return Strings.ERROR_EMAIL_ALREADY_IN_USE;
-    else if(type.contains("ERROR_USER_NOT_FOUND"))
+    else if (type.contains("ERROR_USER_NOT_FOUND"))
       return Strings.ERROR_USER_NOT_FOUND;
-
+    else if (type.contains("ERROR_TOO_MANY_REQUESTS"))
+      return Strings.ERROR_TOO_MANY_REQUESTS;
+    else if (type.contains("ERROR_WRONG_PASSWORD"))
+      return Strings.ERROR_WRONG_PASSWORD;
     else
       return Strings.ERROR_DEFAULT;
   }
+  toast(String msg, BuildContext context){
+    Toast.show(msg, context, duration: Toast.LENGTH_SHORT, gravity:  Toast.CENTER);
 
-  basicAlert(
-      context, String positiveText, String titleText, String contentText, {bool isBack = false, Widget page}) {
+  }
+
+  basicAlert(context, String positiveText, String titleText, String contentText,
+      {bool isBack = false, Widget page}) {
     showAnimatedDialog(
       context: context,
       barrierDismissible: true,
@@ -84,8 +81,7 @@ class Utils {
           contentText: contentText,
           onPositiveClick: () {
             Navigator.of(context).pop();
-            if( isBack )
-              Utils().push(context, page);
+            if (isBack) Utils().push(context, page);
           },
         );
       },
@@ -96,7 +92,8 @@ class Utils {
   }
 
   header(context) {
-    return Row(
+    return
+      Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
@@ -130,7 +127,7 @@ class Utils {
     );
   }
 
-  title(context, String action, {double  t1, double  t2, double  t3}) {
+  title(context, String action, {double t1, double t2, double t3}) {
     return Column(
       children: <Widget>[
         header(context),
@@ -150,7 +147,7 @@ class Utils {
               "$action",
               style: GoogleFonts.portLligatSans(
                 textStyle: Theme.of(context).textTheme.display1,
-                fontSize:  t2 ?? 20,
+                fontSize: t2 ?? 20,
                 fontWeight: FontWeight.w700,
                 color: Colors.black,
               ),
@@ -159,7 +156,7 @@ class Utils {
               "]",
               style: GoogleFonts.portLligatSans(
                 textStyle: Theme.of(context).textTheme.display1,
-                fontSize:  t3 ?? 30,
+                fontSize: t3 ?? 30,
                 fontWeight: FontWeight.w700,
                 color: MyColors.PRIMARY_COLOR,
               ),
@@ -194,4 +191,34 @@ class Utils {
     double pixelRatio = MediaQuery.of(context).devicePixelRatio;
     return 1 / pixelRatio;
   }
+
+  allDataProfileOk() async {
+    int x = await Prefs.getInt(Consts.ALL_DATA_PROFILE_OK);
+    if (x == 2) return;
+    Prefs.setInt(Consts.ALL_DATA_PROFILE_OK, 1);
+  }
+
+  String replace(String pathPhoto) {
+    String o = pathPhoto.replaceAll('File:', '');
+    return o.replaceAll("'", "").trim();
+  }
+
+  roundedImage(String url, {double h = 82, double w = 82}) {
+    return ClipOval(
+      child: Container(
+        color: MyColors.PRIMARY_COLOR,
+        height: h,
+        width: w,
+        child: CachedNetworkImage(
+          placeholder: (context, url) => CircularProgressIndicator(backgroundColor: Colors.white,),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+          imageUrl: url,
+          width: w,
+          height: h,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
 }

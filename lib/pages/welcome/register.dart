@@ -1,10 +1,12 @@
 import 'package:extra/api/api_response.dart';
 import 'package:extra/bloc/register_bloc.dart';
+import 'package:extra/pages/home.dart';
 import 'package:extra/pages/welcome/welcome.dart';
 import 'package:extra/utils/colors.dart';
 import 'package:extra/utils/consts.dart';
 import 'package:extra/utils/strings.dart';
 import 'package:extra/utils/utils.dart';
+import 'package:extra/widgets/back.dart';
 import 'package:extra/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,9 +15,6 @@ import 'package:loading_animations/loading_animations.dart';
 import 'package:nice_button/nice_button.dart';
 
 class Register extends StatefulWidget {
-  bool isScroable;
-
-  Register({this.isScroable = false});
 
   @override
   _RegisterState createState() => _RegisterState();
@@ -41,64 +40,13 @@ class _RegisterState extends State<Register> {
     return ListView(
       shrinkWrap: true,
       children: [
-        Row(
-          children: <Widget>[
-            widget.isScroable
-                ? Container()
-                : FlatButton.icon(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      color: MyColors.PRIMARY_COLOR,
-                    ),
-                    label: Text(
-                      Strings.BACK,
-                      style: TextStyle(
-                        color: MyColors.PRIMARY_COLOR,
-                      ),
-                    ),
-                  ),
-          ],
-        ),
-        Utils().title(context, Strings.NEW_USER),
+        Back(Welcome(), Strings.NEW_USER),
         Form(
           key: _formKey,
           child: Padding(
             padding: EdgeInsets.all(16),
             child: _textFields(),
           ),
-        ),
-        NiceButton(
-          width: double.infinity,
-          gradientColors: [MyColors.PRIMARY_COLOR, MyColors.ACCENT_COLOR],
-          text: Strings.CREATE,
-          onPressed: () async {
-            _updateUI(true);
-            if (_formKey.currentState.validate()) {
-              if (isCheck) {
-                ApiResponse response =
-                    await bloc.doCreateUser(_login.text, _password.text);
-                if (response.ok) {
-                  _alert(Strings.OK_I_UNDERSTAND, Strings.OK,
-                      Strings.CREATE_SUCCESS_USER,
-                      isBack: true, page: Welcome());
-                } else {
-                  _alert(Strings.OK_I_UNDERSTAND, Strings.OK,
-                      "${Strings.ERROR_ACTION} ${Utils().errorFirebase(response.msg)}");
-                }
-              } else {
-                _alert(Strings.OK_I_UNDERSTAND, Strings.OPS,
-                    Strings.ACCEPT_TERMS_WARNING);
-              }
-            } else {
-              _updateUI(false);
-              return null;
-
-            }
-            _updateUI(false);
-          },
         ),
         Center(
           child: CheckboxListTile(
@@ -120,6 +68,38 @@ class _RegisterState extends State<Register> {
         SizedBox(
           height: 30,
         ),
+        NiceButton(
+          width: double.infinity,
+          gradientColors: [MyColors.PRIMARY_COLOR, MyColors.ACCENT_COLOR],
+          text: Strings.CREATE,
+          onPressed: () async {
+            _updateUI(true);
+            if (_formKey.currentState.validate()) {
+              if (isCheck) {
+                ApiResponse response =
+                    await bloc.doCreateUser(_login.text, _password.text);
+                if (response.ok) {
+                    Utils().allDataProfileOk();
+                  _alert(Strings.OK_I_UNDERSTAND, Strings.OK,
+                      Strings.CREATE_SUCCESS_USER,
+                      isBack: true, page: Home());
+                } else {
+                  _alert(Strings.OK_I_UNDERSTAND, Strings.OK,
+                      "${Strings.ERROR_ACTION} ${Utils().errorFirebase(response.msg)}");
+                }
+              } else {
+                _alert(Strings.OK_I_UNDERSTAND, Strings.OPS,
+                    Strings.ACCEPT_TERMS_WARNING);
+              }
+            } else {
+              _updateUI(false);
+              return null;
+
+            }
+            _updateUI(false);
+          },
+        ),
+
       ],
     );
   }
