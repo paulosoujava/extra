@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:extra/bloc/generic_bloc.dart';
+import 'package:extra/entity/extra_job.dart';
 import 'package:extra/entity/profile.dart';
 import 'package:extra/service/firebase_service.dart';
+import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +14,10 @@ import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:path/path.dart' as Path;
 
 class EditProfileBloc extends GenericBloc<List<Profile>> {
-
   setProfile(Profile profile) {
     print("call set profike");
-  Future<void> ref =  Firestore.instance.collection('profiles').document().setData({
+    Future<void> ref =
+        Firestore.instance.collection('profiles').document().setData({
       'name': profile.name,
       'email': profile.email,
       'phone': profile.phone,
@@ -23,11 +26,12 @@ class EditProfileBloc extends GenericBloc<List<Profile>> {
       'urlPhoto': profile.urlPhoto,
       'mainFunction': profile.mainFunction,
       'talks': profile.talks,
+      'extras': profile.extras,
       'discription': profile.description
     });
-  ref.catchError((onError){
-    print(onError);
-  });
+    ref.catchError((onError) {
+      print(onError);
+    });
   }
 
   Future<bool> uploadFile(image) async {
@@ -70,5 +74,18 @@ class EditProfileBloc extends GenericBloc<List<Profile>> {
         targetHeight: (properties.height * 180 / properties.width).round());
   }
 
-
+  saveInFirestore(Profile p) {
+    Firestore.instance.collection('profiles').document().setData({
+      'id': p.id,
+      'name': p.name,
+      'email': p.email,
+      'phone': p.phone,
+      'city': p.city,
+      'state': p.state,
+      'urlPhoto': p.urlPhoto,
+      'mainFunction': p.mainFunction,
+      'description': p.description,
+      'month': p.month,
+    });
+  }
 }

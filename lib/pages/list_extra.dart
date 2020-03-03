@@ -68,6 +68,7 @@ class _ListExtrasState extends State<ListExtras> {
                     itemBuilder: (context, index) {
                       return CardItemExtra(
                         p.extras[index],
+                        p,
                         indexToEdit: index,
                       );
                     },

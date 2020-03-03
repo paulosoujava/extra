@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extra/entity/profile.dart';
 import 'package:extra/pages/public_profile.dart';
 import 'package:extra/service/service.dart';
 import 'package:extra/utils/colors.dart';
+import 'package:extra/utils/consts.dart';
+import 'package:extra/utils/prefs.dart';
 import 'package:extra/utils/strings.dart';
 import 'package:extra/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,15 +15,19 @@ class CardItem extends StatefulWidget {
   Profile profile;
   bool type;
 
+
   CardItem(this.profile, {this.type = false});
 
   @override
   _CardItemState createState() => _CardItemState();
 }
 
+
 class _CardItemState extends State<CardItem> {
+
   @override
   Widget build(BuildContext context) {
+    print(widget.profile);
     return Column(
       children: <Widget>[
         Padding(
@@ -38,16 +43,17 @@ class _CardItemState extends State<CardItem> {
           children: <Widget>[
             FlatButton.icon(
                 onPressed: () {
-                  Utils().pushNoReplacement(context, PublicProfile());
+                  Utils().pushNoReplacement(context, PublicProfile(widget.profile));
                 },
                 icon: Icon(Icons.visibility),
                 label: Text(Strings.PROFILE_VIEW)),
-            FlatButton.icon(
-                onPressed: () {
-                  Utils().pushNoReplacement(context, Service().getChats());
-                },
-                icon: Icon(Icons.chat),
-                label: Text(Strings.CHAT_VIEW)),
+
+                 FlatButton.icon(
+                    onPressed: widget.profile.isMe ? null : () {
+                      //Utils().pushNoReplacement(context, Service().getChats());
+                    },
+                    icon: widget.profile.isMe ? Icon(Icons.perm_identity) : Icon(Icons.chat),
+                    label: widget.profile.isMe ? Text(Strings.YOU) : Text(Strings.CHAT_VIEW)),
           ],
         )
       ],
@@ -97,18 +103,21 @@ class _CardItemState extends State<CardItem> {
     );
   }
 
-  _itemRede(Profile profile) {
-    print(profile);
+  _itemRede(Profile profile)  {
     return Row(
       children: <Widget>[
-        profile.urlPhoto == null
-            ? profile.pathPhoto != null
-                ? FileImage(File(Utils().replace(profile.pathPhoto)))
-                : Icon(
-                    Icons.account_circle,
-                    size: 64.0,
-                  )
-            : Utils().roundedImage(profile.urlPhoto),
+        profile.urlPhoto == null && profile.pathPhoto == null
+            //no has photo
+            ? Icon(
+                Icons.account_circle,
+                size: 64.0,
+              )
+            : profile.pathPhoto != null
+                ? Utils().roundedImageFile(profile.pathPhoto)
+                : profile.urlPhoto == null && profile.pathPhoto == null
+                    ? //show my picture
+                    FileImage(File(Utils().replace(profile.pathPhoto)))
+                    : Utils().roundedImage(profile.urlPhoto),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -129,17 +138,20 @@ class _CardItemState extends State<CardItem> {
                       decoration: BoxDecoration(
                           color: MyColors.ACCENT_COLOR, shape: BoxShape.circle),
                       alignment: Alignment.center,
-                      height: 30,
-                      width: 30,
-                      child: Text(
-                        profile.state.toLowerCase(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 21.0),
+                      height: 35,
+                      width: 35,
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Text(
+                          profile.state.toUpperCase(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 21.0),
+                        ),
                       ),
                     ),
                   ],
@@ -160,4 +172,5 @@ class _CardItemState extends State<CardItem> {
       ],
     );
   }
+
 }

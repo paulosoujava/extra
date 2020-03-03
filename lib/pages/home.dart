@@ -35,8 +35,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   TabController _tabController;
   Profile p;
   bool isLoading = true;
+  bool isUpdateProfile = false;
+  List<Profile> pList;
   StreamSubscription<Event> subscription;
-
 
   final List<Text> myTabs = <Text>[
     Text(
@@ -58,11 +59,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
     _tabController = TabController(vsync: this, length: myTabs.length);
     _checkUser();
+    _updateProfile();
     final bus = EventBus.get(context);
     subscription = bus.stream.listen((Event e) {
       ExtraJob extraEvent = e;
-      if (extraEvent.actionEvent == Consts.EVENT_JOB) _checkUser();
-      ;
+      if (extraEvent.actionEvent == Consts.EVENT_PROFILE) _updateProfile();
     });
   }
 
@@ -160,7 +161,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               : TabBarView(
                   controller: _tabController,
                   children: <Widget>[
-                    _containerProfile(),
+                    isUpdateProfile
+                        ? _containerProfile()
+                        : NoHasData(Strings.TEXT_FIRST_TIME),
                     _containerAnuncio(),
                     _containerChat()
                   ],
@@ -170,15 +173,22 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
+  _updateProfile() async {
+    pList = await Service().getProfiles();
+    setState(() {
+      isUpdateProfile = true;
+    });
+  }
+
+  _checkEmail() => (Prefs.getString(Consts.EMAIL));
+
+
   _containerProfile() {
-    return p.isDataOk
-        ? NoHasData(Strings.TEXT_FIRST_TIME)
-        : ListView(
-            children: <Widget>[
-              TabRede(p)
-              //Service().getProfiles(),
-            ],
-          );
+    return ListView.builder(
+        itemCount: pList != null && pList.isNotEmpty ? pList.length : 0,
+        itemBuilder: (ctx, idx) {
+          return TabRede(pList[idx] );
+        });
   }
 
   _containerAnuncio() {
@@ -189,11 +199,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             child: Container(height: 200, child: NoHasData(Strings.NOTHING)),
           )
         : Container(
-            child: ListView(
-              children: <Widget>[
-                for (ExtraJob job in p.extras) TabExtra(job),
-              ],
-            ),
+            child: ListView.builder(
+                itemCount: p != null && p.extras != null && p.extras.isNotEmpty
+                    ? p.extras.length
+                    : 0,
+                itemBuilder: (ctx, idx) {
+                  return TabExtra(p.extras[idx], p);
+                }),
           );
   }
 
@@ -201,11 +213,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return p == null || p.talks == null
         ? NoHasData(Strings.NO_HAS_DATA_CONVERSATION)
         : ListView(
-            children: <Widget>[
-              TabConversation(
-                Service().getProfile(),
-              )
-            ],
+            children: <Widget>[TabConversation(null)],
           );
   }
 
@@ -221,7 +229,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           p.city != null &&
           p.state != null) {
         Prefs.setInt(Consts.ALL_DATA_PROFILE_OK, 2);
+        Prefs.setString(Consts.EMAIL, p.email);
         p.isDataOk = true;
+        p.isMe = true;
         p.save();
       }
     }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extra/utils/colors.dart';
@@ -216,6 +218,23 @@ class Utils {
           width: w,
           height: h,
           fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+  roundedImageFile(String url){
+    return  Container(
+      width: 82,
+      height: 82,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: FileImage(File(Utils().replace(url)) ),
+          fit: BoxFit.cover,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(90.0)),
+        border: Border.all(
+          color: MyColors.PRIMARY_COLOR,
+          width: 1.0,
         ),
       ),
     );

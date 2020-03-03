@@ -88,6 +88,7 @@ class Strings {
   static const String ABOUT = "sobre este app";
   static const String PROFILE_VIEW = "Perfil";
   static const String CHAT_VIEW = "Chat";
+  static const String YOU = "Você";
   static const String SUBTITLE_REPORT = "relate o ocorrido";
   static const String TITLE_REPORT = "reporte este usuário";
   static const String CONTACT_EMAIL = "contato por telefone";

@@ -10,23 +10,29 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PublicProfile extends StatefulWidget {
+
+  Profile profile;
+
+
+  PublicProfile(this.profile);
+
   @override
   _PublicProfileState createState() => _PublicProfileState();
 }
 
 class _PublicProfileState extends State<PublicProfile> {
-  Profile profile;
-  bool isLoading = false;
 
+  bool isLoading = false;
+  Profile profile;
   @override
   void initState() {
     super.initState();
-    _loadData();
+    profile = widget.profile;
+
   }
 
   @override
   Widget build(BuildContext context) {
-    print(profile);
     return isLoading
         ? Loading()
         : Scaffold(

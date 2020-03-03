@@ -21,14 +21,15 @@ class Profile {
   List<Talks> talks;
   List<ExtraJob> extras;
   String description;
-
   bool isReported;
+  bool isMe;
   String month;
   int limit;
 
   Profile(
       {this.id,
       this.isDataOk,
+      this.isMe,
       this.name,
       this.email,
       this.phone,
@@ -47,6 +48,7 @@ class Profile {
 
   Profile.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    isMe = json['isMe'];
     isDataOk = json['isDataOk'];
     name = json['name'];
     email = json['email'];
@@ -74,6 +76,7 @@ class Profile {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['isDataOk'] = this.isDataOk;
+    data['isMe'] = this.isMe;
     data['name'] = this.name;
     data['email'] = this.email;
     data['phone'] = this.phone;
@@ -96,6 +99,7 @@ class Profile {
     Map map = toJson();
     String json = convert.json.encode(map);
     Prefs.setString(Consts.KEY_PREFS_PROFILE, json);
+
   }
 
   static Future<Profile> get() async {
@@ -110,6 +114,6 @@ class Profile {
 
   @override
   String toString() {
-    return 'Profile{id: $id, isDataOk: $isDataOk, name: $name, email: $email, phone: $phone, city: $city, state: $state, urlPhoto: $urlPhoto, oldUrlPhoto: $oldUrlPhoto, pathPhoto: $pathPhoto, mainFunction: $mainFunction, filter: $filter, talks: $talks, extras: $extras, description: $description, isReported: $isReported, month: $month, limit: $limit}';
+    return 'Profile{id: $id, isDataOk: $isDataOk, isMe: $isMe, name: $name, email: $email, phone: $phone, city: $city, state: $state, urlPhoto: $urlPhoto, oldUrlPhoto: $oldUrlPhoto, pathPhoto: $pathPhoto, mainFunction: $mainFunction, filter: $filter, talks: $talks, extras: $extras, description: $description, isReported: $isReported, month: $month, limit: $limit}';
   }
 }

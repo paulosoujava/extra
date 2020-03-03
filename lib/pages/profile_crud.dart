@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:extra/bloc/edit_profile_bloc.dart';
 import 'package:extra/entity/extra_job.dart';
 import 'package:extra/entity/profile.dart';
@@ -263,6 +264,7 @@ class _CrudProfileState extends State<CrudProfile> {
                               }
                               setState(() {
                                 p.save();
+                                bloc.setProfile(p);
                                 _sendBus();
                               });
                             } else {
@@ -295,7 +297,6 @@ class _CrudProfileState extends State<CrudProfile> {
   loadData() async {
     p = await Profile.get();
     if (p != null) {
-      print(p);
       setState(() {
         _name.text = p.name;
         _email.text = p.email;
@@ -351,7 +352,6 @@ class _CrudProfileState extends State<CrudProfile> {
   }
 
   _witchImage() {
-    print(p);
     if (_image != null) return FileImage(_image);
     if (p == null || p.pathPhoto == null)
       return AssetImage(
@@ -364,7 +364,6 @@ class _CrudProfileState extends State<CrudProfile> {
 
   _getImage() async {
     Profile p = await Profile.get();
-    print(p);
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       _image = image;
@@ -376,6 +375,8 @@ class _CrudProfileState extends State<CrudProfile> {
   }
 
   _sendBus() {
-    EventBus.get(context).sendEvent(ExtraJob(actionEvent: Consts.EVENT_JOB));
+
+    EventBus.get(context).sendEvent(ExtraJob(actionEvent: Consts.EVENT_PROFILE));
   }
+
 }

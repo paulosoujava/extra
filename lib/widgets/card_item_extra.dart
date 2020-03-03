@@ -6,6 +6,7 @@ import 'package:extra/pages/list_extra.dart';
 import 'package:extra/pages/public_profile.dart';
 import 'package:extra/utils/consts.dart';
 import 'package:extra/utils/event_bus.dart';
+import 'package:extra/utils/prefs.dart';
 import 'package:extra/utils/strings.dart';
 import 'package:extra/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,18 +14,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 
 class CardItemExtra extends StatefulWidget {
+
   ExtraJob job;
+  Profile profile;
   bool isShow;
   int indexToEdit;
 
-  CardItemExtra(this.job,{ this.isShow = false, this.indexToEdit});
+  CardItemExtra(this.job, this.profile,{ this.isShow = false, this.indexToEdit});
 
   @override
   _CardItemExtraState createState() => _CardItemExtraState();
 }
 
 class _CardItemExtraState extends State<CardItemExtra> {
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -68,12 +70,13 @@ class _CardItemExtraState extends State<CardItemExtra> {
               if( !widget.isShow)
                   delete(context, widget.indexToEdit,);
               else
-                Utils().pushNoReplacement(context, PublicProfile());
+                Utils().pushNoReplacement(context, PublicProfile(widget.profile));
               
 
             },
             icon: Icon(widget.isShow ? Icons.visibility : Icons.delete),
             label: Text(btn1)),
+
         FlatButton.icon(
             onPressed: () {
               if( !widget.isShow )
